@@ -1,0 +1,12 @@
+{
+  "name": "llm-cliche-highlighter-tests",
+  "private": true,
+  "description": "Dev-only tests: `node run.js` (pattern core, no deps) and `node dom-test.mjs` (content script under jsdom).",
+  "scripts": {
+    "test": "node run.js && node dom-test.mjs",
+    "e2e": "node e2e-chromium.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}
