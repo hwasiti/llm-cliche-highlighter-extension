@@ -3,27 +3,32 @@
 Paste-ready copy and the steps for submitting to the Chrome Web Store and
 addons.mozilla.org (AMO). Nothing has been submitted yet.
 
-## 1. Build
+## 1. Build and package
 
 Never upload the repository root: it carries both browsers' background keys, so
 each store flags the one it does not implement, plus tests and fixtures.
 
 ```sh
-node tools/build.mjs
+npm run package
 ```
 
-| Target | Directory | Manifest difference |
+That runs `tools/build.mjs`, then web-ext, leaving store-ready zips in
+`dist/artifacts/` with `manifest.json` correctly at the archive root.
+
+| Target | Build directory | Manifest difference |
 | --- | --- | --- |
 | Chrome Web Store | `dist/chrome/` | `service_worker` only, gecko keys dropped |
 | AMO | `dist/firefox/` | `scripts` only, gecko keys kept |
 
-Zip the *contents* so `manifest.json` sits at the archive root:
+Run the Firefox linter before submitting. It catches most of what AMO would
+reject:
 
 ```sh
-cd dist/chrome && zip -r ../chrome.zip . && cd ../..
+npm run lint:firefox
 ```
 
-Load each build once before zipping and confirm it reports zero warnings.
+Load each build once and confirm it reports zero warnings.
+`npm run start:firefox` opens a clean Firefox with the add-on installed.
 
 ## 2. Listing copy
 
@@ -104,7 +109,14 @@ extension declares no content_scripts, so nothing runs until the user clicks.
 
 ## 4. AMO
 
-**Extension ID** is already in the manifest: `{e3050897-ca45-4267-9197-95462684c8a9}`
+**Extension ID** is set in the manifest, and is fork-specific so it cannot
+collide with the upstream add-on:
+
+```
+llm-cliche-highlighter@wasiti14.gmail.com
+```
+
+The manifest is authoritative. If it changes, change it here too.
 
 **Data collection** is already declared as `"required": ["none"]`. Make the AMO
 form's answers agree with the manifest; a mismatch is a rejection.
@@ -136,28 +148,36 @@ The extension makes no network requests and uses no storage API.
 **Licence:** Apache License 2.0, selected in the form. `LICENSE` is already in
 the package.
 
-## 5. Assets still to produce
+## 5. Store assets
 
-None of these exist in the repository yet, and neither submission can be
-completed without them.
+Generate these rather than capturing them by hand:
+
+```sh
+npm run assets
+```
+
+`tools/store-assets.mjs` writes into `store/`. The screenshots are real: it
+applies `core.js` and `content.js` to `test-page.html` in an isolated world, the
+same mechanism the toolbar click uses, so the pixels are what a user actually
+sees.
 
 | Asset | Size | Needed by |
 | --- | --- | --- |
-| Screenshots | 1280x800 or 640x400 | Chrome, one to five |
-| Screenshots | any reasonable size | AMO, recommended |
+| Screenshots | 1280x800 | Chrome, one to five; recommended on AMO |
 | Small promo tile | 440x280 | Chrome, optional |
+| Marquee promo tile | 1400x560 | Chrome, optional |
 | Store icon | 128x128 | Both, already in `icons/` |
 
-The obvious screenshot is `test-page.html` with highlights active and a tooltip
-visible, since it shows the highlight, badge and tooltip in one frame. Confirm
-current required sizes on each store's docs at submission time; they change.
+Confirm current required sizes on each store's documentation at submission
+time; they change.
 
 ## 6. Checklist
 
-- [ ] `cd tests && npm test` passes
-- [ ] `node tools/build.mjs` run, both builds loaded with zero warnings
-- [ ] Version bumped in `manifest.json`, matching the release notes
-- [ ] Screenshots captured
+- [ ] `npm test` passes
+- [ ] `npm run lint:firefox` clean
+- [ ] `npm run package` run, both builds loaded with zero warnings
+- [ ] Version bumped in `manifest.json` and `package.json`, matching the notes
+- [ ] `npm run assets` run and `store/` reviewed
 - [ ] Privacy policy URL live on the right branch
 - [ ] Justifications and reviewer notes pasted from sections 3 and 4
 - [ ] AMO data answers agree with the manifest
