@@ -1,5 +1,7 @@
 // Emits warning-free per-browser copies of the extension into dist/.
 //
+// Copyright 2026 Haider Alwasiti (Apache License 2.0 — see LICENSE).
+//
 // The checked-in manifest.json declares both background.scripts and
 // background.service_worker — the documented cross-browser MV3 pattern
 // (Chromium runs the worker and ignores scripts; Firefox, which has no
@@ -34,9 +36,13 @@ const TARGETS = {
   chrome(m) {
     delete m.background.scripts;
     delete m.browser_specific_settings;
+    // No `author` here on purpose: Chrome's current manifest reference does
+    // not document the key, and the Web Store takes the developer name from
+    // the publisher account rather than the manifest. AMO does use it.
   },
   firefox(m) {
     delete m.background.service_worker;
+    m.author = 'Haider Alwasiti';
   }
 };
 

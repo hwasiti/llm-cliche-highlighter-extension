@@ -1,0 +1,30 @@
+{
+  "name": "llm-cliche-highlighter-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser extension (Chrome + Firefox) that highlights LLM cliches on the page you are reading.",
+  "author": "Haider Alwasiti <wasiti14@gmail.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/hwasiti/llm-cliche-highlighter-extension",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hwasiti/llm-cliche-highlighter-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hwasiti/llm-cliche-highlighter-extension/issues"
+  },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "package": "npm run build && npm run package:chrome && npm run package:firefox",
+    "package:chrome": "web-ext build -s dist/chrome -a dist/artifacts -n llm-cliche-highlighter-chrome-{version}.zip --overwrite-dest",
+    "package:firefox": "web-ext build -s dist/firefox -a dist/artifacts -n llm-cliche-highlighter-firefox-{version}.zip --overwrite-dest",
+    "lint:firefox": "npm run build && web-ext lint -s dist/firefox",
+    "start:firefox": "npm run build && web-ext run -s dist/firefox",
+    "assets": "node tools/store-assets.mjs",
+    "test": "npm --prefix tests test",
+    "e2e": "npm --prefix tests run e2e"
+  },
+  "devDependencies": {
+    "web-ext": "^8.5.0"
+  }
+}
