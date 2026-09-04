@@ -60,6 +60,12 @@ catalogued in Wikipedia's "Signs of AI writing" guide. The detection engine is a
 port of Simon Willison's llm-cliche-highlighter, used under the Apache License
 2.0. The original is a page you paste text into; this scans a live page instead.
 
+Credit where it is due: this is a fork of Bruno Renié's
+llm-cliche-highlighter-extension, which built the extension around that engine.
+Both are Apache License 2.0, and both authors are credited in the bundled
+LICENSE. This fork adds per-browser builds and fixes a bug that stopped the
+detection engine re-running after the first click.
+
 Built so that it cannot spy on you: no data collection, no analytics, no network
 access, and no host permissions. It does nothing at all until you click the
 button, at which point the browser grants access to that one tab and nothing
@@ -138,9 +144,13 @@ writes a manifest derived from the repository's manifest.json with the
 Chromium-only background.service_worker key removed. All JavaScript in the
 package is identical to the repository's and is readable as shipped.
 
-core.js is a port of the detection engine from Simon Willison's
-llm-cliche-highlighter, used under the Apache License 2.0. Attribution headers
-and the modification notices required by section 4(b) are present in the file.
+This add-on is a fork of https://github.com/brutasse/llm-cliche-highlighter-extension
+by Bruno Renié, which is itself built around the detection engine from Simon
+Willison's llm-cliche-highlighter. Both are Apache License 2.0, and both
+copyright notices are retained as section 4(c) requires; the submitter is added
+as a third holder for this fork's changes only. Every file this fork modified
+carries the section 4(b) change notice naming the modification. LICENSE, in the
+package, lists all three holders.
 
 The extension makes no network requests and uses no storage API.
 ```
@@ -182,13 +192,22 @@ time; they change.
 - [ ] Justifications and reviewer notes pasted from sections 3 and 4
 - [ ] AMO data answers agree with the manifest
 - [ ] `strict_min_version` decided deliberately
-- [ ] Simon Willison credited in the listing description
+- [ ] Simon Willison **and** Bruno Renié credited in the listing description
+- [ ] Issues enabled on the GitHub repo, so the support URL resolves
+      (GitHub disables issues on forks by default)
 
 ## 7. Review risks
 
-- **Attribution.** The engine is a port of someone else's Apache-2.0 work. The
-  repository handles this correctly; the listing should credit it too.
-- **The name** is close to the upstream tool's. Consider asking upstream before
-  the listing goes live.
+- **Attribution.** Two layers of someone else's Apache-2.0 work are being
+  listed: Simon Willison's detection engine, and Bruno Renié's extension around
+  it, which this repository forks. The licence permits publishing both, and the
+  repository handles the notices correctly — but the listing description and the
+  reviewer notes must say so too. A reviewer who discovers the provenance
+  themselves is a slower review than one who was told up front.
+- **The name** is the upstream extension's, unchanged. Nothing on either store
+  uses it today, so there is no duplicate listing to collide with. If upstream
+  later publishes, the two listings would compete under one name.
+- **Publishing a fork upstream hasn't published.** Permitted, and covered by the
+  attribution above. Telling Bruno Renié first is a courtesy, not a requirement.
 - **Broad text access.** `activeTab` reads whatever page the user is on. The
   justification above is the click-gated, minimal-scope argument reviewers want.
