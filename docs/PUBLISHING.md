@@ -137,12 +137,22 @@ older versions install without ever prompting. Decide this deliberately.
 ```
 Source: https://github.com/hwasiti/llm-cliche-highlighter-extension
 
-The submitted package is produced by `node tools/build.mjs` from the repository
-root. That script performs no minification, bundling or transpilation. It copies
-core.js, content.js, background.js, the icons and LICENSE byte for byte, and
-writes a manifest derived from the repository's manifest.json with the
-Chromium-only background.service_worker key removed. All JavaScript in the
-package is identical to the repository's and is readable as shipped.
+To reproduce the submitted package from that source, from the repository root:
+
+  npm install
+  npm run package
+
+That writes dist/artifacts/llm-cliche-highlighter-firefox-<version>.zip, which
+is the uploaded file. Built with Node.js 24 on Windows; any recent Node works,
+and the only build dependency is web-ext.
+
+The build performs no minification, bundling or transpilation. tools/build.mjs
+copies core.js, content.js, background.js, the icons and LICENSE byte for byte
+into dist/firefox/, and writes a manifest derived from the repository's
+manifest.json with exactly two changes: the Chromium-only
+background.service_worker key is removed, and an "author" field is added.
+web-ext then zips that directory unchanged. All JavaScript in the package is
+identical to the repository's and is readable as shipped.
 
 This add-on is a fork of https://github.com/brutasse/llm-cliche-highlighter-extension
 by Bruno Renié, which is itself built around the detection engine from Simon
