@@ -5,6 +5,10 @@
 // engine is derived from llm-cliche-highlighter.html in
 // https://github.com/simonw/tools (Copyright 2026 Simon Willison).
 //
+// Modified 2026 by Haider Alwasiti (Apache License 2.0 — see LICENSE):
+// report() now prefers the `browser` namespace and normalises the send with
+// Promise.resolve(), so a Firefox callback-style return value cannot throw.
+//
 // Injected after core.js when the toolbar button is clicked. Walks the page's
 // main content, builds a plain-text view with an offset map back to the DOM,
 // runs the pattern detectors from core.js over it, and wraps each match in a
@@ -167,13 +171,20 @@
     (document.head || document.documentElement).appendChild(style);
   }
 
+  // Same namespace caveat as background.js: Firefox's promise-based API is on
+  // `browser`, and chaining .catch() onto a possibly-undefined chrome.* return
+  // value would throw out of toggle() after the marks were already applied.
   function report(result) {
-    if (typeof chrome !== 'undefined' && chrome.runtime &&
-        chrome.runtime.sendMessage) {
-      chrome.runtime.sendMessage(
-        { type: 'cliche-toggled', active: result.active, count: result.count })
+    const api = typeof browser !== 'undefined' ? browser
+      : (typeof chrome !== 'undefined' ? chrome : null);
+    if (!api || !api.runtime || !api.runtime.sendMessage) return;
+    // The badge is best-effort: a torn-down background page means there is no
+    // receiver, which rejects (or throws synchronously). Neither matters.
+    try {
+      Promise.resolve(api.runtime.sendMessage(
+        { type: 'cliche-toggled', active: result.active, count: result.count }))
         .catch(() => {});
-    }
+    } catch (_) { /* no receiver */ }
   }
 
   function toggle() {

@@ -9,9 +9,23 @@
 // fetched URL, and a CommonJS/browser dual export was appended. Everything
 // else is the upstream "impl" section, unmodified.
 //
+// Further modified 2026 by Haider Alwasiti (Apache License 2.0 — see LICENSE):
+// wrapped in an IIFE. background.js re-injects this file into the same
+// isolated world on every toolbar click, and a classic script's top-level
+// `const` bindings persist in that world's global lexical environment — so
+// from the second click on, the file failed to parse with
+// "SyntaxError: Identifier 'CHAIN_BODY' has already been declared" and never
+// ran. Toggling still worked, because window.LLMCliche survived from the
+// first injection, which is why the error went unnoticed. The IIFE makes
+// re-injection idempotent. The body is deliberately NOT re-indented: this
+// file is a verbatim port, and a whitespace-only shift of 550 lines would
+// destroy its diffability against the upstream original.
+//
 // Engine only: pattern definitions and match/region computation over a plain
 // text string. No DOM access. Consumed as window.LLMCliche in the content
 // script and as module.exports in the Node test runner.
+
+(function () {
 
 // Each pattern: { id, name, description, find(text) -> [{ start, end, badge?, badgeTitle?, count? }] }
 // Add new patterns to this array and they get a checkbox, per-pattern count, and highlighting for free.
@@ -575,3 +589,5 @@ if (typeof module !== 'undefined' && module.exports) {
 } else {
   window.LLMCliche = LLMCliche;
 }
+
+})();
