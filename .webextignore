@@ -1,3 +1,4 @@
 tests/
 tools/
 test-page.html
+dist/
