@@ -204,6 +204,8 @@ dist/              build output, gitignored: chrome/ and firefox/
   stored or transmitted; also the URL to hand the stores.
 - [docs/PUBLISHING.md](docs/PUBLISHING.md) — store submission guide: builds,
   listing copy, permission justifications, reviewer notes.
+- [docs/CHROME-SUBMISSION.md](docs/CHROME-SUBMISSION.md) — paste-ready fields
+  for the Chrome Web Store dashboard, which cannot be automated.
 
 ## Tests
 

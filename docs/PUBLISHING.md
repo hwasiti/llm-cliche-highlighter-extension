@@ -280,19 +280,9 @@ script or screenshot `chrome.google.com/webstore/*` — the attempt fails with
 "The extensions gallery cannot be scripted." That is a browser security control,
 not a bug to work around, so the Chrome submission is a manual job.
 
-Everything needed is already built and in this repo:
-
-1. `npm run package` → upload `dist/artifacts/llm-cliche-highlighter-chrome-1.0.1.zip`
-   at https://chrome.google.com/webstore/devconsole → **New item**.
-2. Store listing: paste the short description and detailed description from
-   section 2. Category: Productivity.
-3. Upload `store/screenshots/*.png` (both are 1280x800) and
-   `store/promo/small-promo-440x280.png` as the small promo tile.
-   `store/promo/marquee-1400x560.png` is optional.
-4. Privacy tab: paste the single purpose statement and the activeTab / scripting
-   justifications from section 3. Tick nothing under data usage. Privacy policy
-   URL: the raw docs/PRIVACY.md URL on the default branch.
-5. Distribution: public, all regions → **Submit for review**.
+**Every field is prepared and length-checked in
+[CHROME-SUBMISSION.md](CHROME-SUBMISSION.md)** — work through that file top to
+bottom and paste each block into the dashboard.
 
 Account prerequisites: a verified publisher email and the one-time 5 USD
 developer fee, both settled before the dashboard will accept a submission.
