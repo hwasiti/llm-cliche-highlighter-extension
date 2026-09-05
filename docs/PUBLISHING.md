@@ -1,7 +1,24 @@
 # Publishing guide
 
 Paste-ready copy and the steps for submitting to the Chrome Web Store and
-addons.mozilla.org (AMO). Nothing has been submitted yet.
+addons.mozilla.org (AMO).
+
+## Current status
+
+| Store | Status |
+| --- | --- |
+| AMO (Firefox) | **Submitted 2026-09-05, awaiting review.** Version 1.0.1, desktop + Android. |
+| Chrome Web Store | **Not submitted.** Must be done by hand — see section 8. |
+
+The AMO listing lives at
+`https://addons.mozilla.org/en-US/developers/addon/llm-cliche-highlighter-ext/`.
+The slug is `llm-cliche-highlighter-ext`, not `llm-cliche-highlighter`: AMO's
+slug namespace is global, that shorter name is already taken by another add-on,
+and the limit is 30 characters (so `llm-cliche-highlighter-extension`, at 32,
+is also rejected).
+
+Version 1.0.0 was submitted first, desktop only, and AMO marked it "Disabled by
+Mozilla" automatically when 1.0.1 superseded it. Nothing to clean up.
 
 ## 1. Build and package
 
@@ -40,42 +57,67 @@ Load each build once and confirm it reports zero warnings.
 Highlight the tells of AI-written text on any page. One click to mark them, one click to clear.
 ```
 
-**Summary** (AMO, 250 char limit):
+**Summary** (AMO, 250 char limit) — this is what is live:
 
 ```
-Highlights the rhetorical tics of LLM-written prose on the page you are reading: "no X, no Y" chains, "that's the whole point", performative honesty, and 35 more. One click marks them, another clears them. No data collection, no network access.
+Ever read something online that sounds like AI wrote it? Click the toolbar button and this add-on highlights the phrases that gave it away, in yellow. Click again to clear. No data collected, no internet connection used.
 ```
 
-**Detailed description:**
+**Detailed description** — live on AMO. Written for a store browser, not a
+developer: no jargon, concrete examples, and the limits stated plainly.
 
 ```
-Click the toolbar icon on any page and the main content lights up: every match
-gets an amber highlight, and hovering it names the pattern that fired. Chain
-constructions such as "No sign-ups, no downloads, no hassle" also carry a badge
-counting the items, and the total appears on the toolbar icon. Click again and
-the page is restored exactly as it was.
+Ever read something online and think "did a chatbot write this?" This add-on
+shows you which bits gave it away.
 
-38 detectors ship with the extension, covering rhetorical tics and the tells
-catalogued in Wikipedia's "Signs of AI writing" guide. The detection engine is a
-port of Simon Willison's llm-cliche-highlighter, used under the Apache License
-2.0. The original is a page you paste text into; this scans a live page instead.
+HOW IT WORKS
 
-Credit where it is due: this is a fork of Bruno Renié's
-llm-cliche-highlighter-extension, which built the extension around that engine.
-Both are Apache License 2.0, and both authors are credited in the bundled
-LICENSE. This fork adds per-browser builds and fixes a bug that stopped the
-detection engine re-running after the first click.
+Click the button in your toolbar. The article lights up: every phrase that
+matches a known AI writing habit turns yellow. Tap or hover one and it tells you
+which habit it spotted. The number on the button shows how many it found. Click
+the button again and the page goes back to exactly how it was.
 
-Built so that it cannot spy on you: no data collection, no analytics, no network
-access, and no host permissions. It does nothing at all until you click the
-button, at which point the browser grants access to that one tab and nothing
-else. Open source under the Apache License 2.0.
+WHAT IT LOOKS FOR
 
-Scope, stated honestly: it scans the main content of the top frame only, so
-navigation, footers and iframes are skipped. Scanning is a snapshot, so on
-single-page apps click after your content has rendered. Code blocks are scanned
-deliberately, since pasted AI transcripts often live there, which makes the
-colon-list detector noisier on technical documentation.
+38 patterns in all - the phrases AI writing reaches for again and again:
+
+- "No sign-ups, no downloads, no hassle" - the three-part list
+- "It's not just an office, but a small museum"
+- "I won't pretend it was smooth" - the humble admission
+- "It is important to note that..."
+- Words like "delve", "a testament to", "ever-evolving landscape"
+
+A highlight means "worth a second look", not "a robot wrote this". Plenty of
+people write this way, and plenty of AI text won't trigger anything at all. It
+is a reading aid, not a detector.
+
+YOUR PRIVACY
+
+It cannot spy on you, and that is built in rather than promised:
+
+- It has no access to any page until you click the button - and then only to
+  that one tab.
+- It has no permission to use the internet, so it cannot send anything anywhere.
+- It saves nothing. Close or reload the page and the highlights are gone.
+- No accounts, no analytics, no tracking.
+
+GOOD TO KNOW
+
+- It reads the main article. Menus, sidebars and footers are left alone.
+- It looks at the page as it is when you click, so on sites that load more as
+  you scroll, click once the text has appeared.
+- It does not look inside embedded frames.
+
+CREDITS
+
+Free and open source, under the Apache License 2.0.
+
+The pattern-matching engine is Simon Willison's llm-cliche-highlighter. This
+add-on is a fork of Bruno Renie's llm-cliche-highlighter-extension, which turned
+that engine into a browser add-on. Both are credited in the licence file bundled
+with the add-on.
+
+Source code: https://github.com/hwasiti/llm-cliche-highlighter-extension
 ```
 
 **Category:** Productivity (Chrome). Other or Web Development (AMO).
@@ -230,3 +272,32 @@ time; they change.
   attribution above. Telling Bruno Renié first is a courtesy, not a requirement.
 - **Broad text access.** `activeTab` reads whatever page the user is on. The
   justification above is the click-gated, minimal-scope argument reviewers want.
+
+## 8. Chrome Web Store must be submitted by hand
+
+Browser automation cannot do this step. Chrome refuses to let **any** extension
+script or screenshot `chrome.google.com/webstore/*` — the attempt fails with
+"The extensions gallery cannot be scripted." That is a browser security control,
+not a bug to work around, so the Chrome submission is a manual job.
+
+Everything needed is already built and in this repo:
+
+1. `npm run package` → upload `dist/artifacts/llm-cliche-highlighter-chrome-1.0.1.zip`
+   at https://chrome.google.com/webstore/devconsole → **New item**.
+2. Store listing: paste the short description and detailed description from
+   section 2. Category: Productivity.
+3. Upload `store/screenshots/*.png` (both are 1280x800) and
+   `store/promo/small-promo-440x280.png` as the small promo tile.
+   `store/promo/marquee-1400x560.png` is optional.
+4. Privacy tab: paste the single purpose statement and the activeTab / scripting
+   justifications from section 3. Tick nothing under data usage. Privacy policy
+   URL: the raw docs/PRIVACY.md URL on the default branch.
+5. Distribution: public, all regions → **Submit for review**.
+
+Account prerequisites: a verified publisher email and the one-time 5 USD
+developer fee, both settled before the dashboard will accept a submission.
+
+Note that Chrome 137 removed the `--load-extension` command-line switch, so
+`npm run e2e` and any script that side-loads the extension into Chrome will not
+work on a current Chrome. Load `dist/chrome/` through chrome://extensions
+instead.
