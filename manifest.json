@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "LLM Cliché Highlighter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Highlights LLM clichés on the current page; click again to remove. Port of Simon Willison's llm-cliche-highlighter (Apache-2.0).",
   "homepage_url": "https://github.com/hwasiti/llm-cliche-highlighter-extension",
   "action": {
@@ -24,6 +24,9 @@
       "data_collection_permissions": {
         "required": ["none"]
       }
+    },
+    "gecko_android": {
+      "strict_min_version": "121.0"
     }
   },
   "permissions": ["activeTab", "scripting"],

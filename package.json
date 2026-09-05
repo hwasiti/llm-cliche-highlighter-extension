@@ -1,6 +1,6 @@
 {
   "name": "llm-cliche-highlighter-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Browser extension (Chrome + Firefox) that highlights LLM cliches on the page you are reading.",
   "author": "Haider Alwasiti <wasiti14@gmail.com>",

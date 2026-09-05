@@ -21,6 +21,17 @@
 // `chrome` (Chromium), and normalise with Promise.resolve() before chaining.
 const api = typeof browser !== 'undefined' ? browser : chrome;
 
+// The badge is decoration, and it is not universally available: Firefox for
+// Android has no toolbar badge to draw on. Every badge call goes through here
+// so that a missing or throwing implementation can never take the injection
+// down with it — highlighting must work even where the count cannot be shown.
+function safeBadge(fn) {
+  try {
+    const r = fn();
+    if (r && typeof r.catch === 'function') r.catch(() => {});
+  } catch (_) { /* no badge on this platform */ }
+}
+
 let lastTabId = null;
 
 api.action.onClicked.addListener((tab) => {
@@ -32,7 +43,8 @@ api.action.onClicked.addListener((tab) => {
   // /^https?:/ against '' would instead make every click a silent no-op.
   if (tab.url && !/^https?:/i.test(tab.url)) return;
   lastTabId = tab.id;
-  api.action.setBadgeBackgroundColor({ tabId: tab.id, color: '#92400e' });
+  safeBadge(() =>
+    api.action.setBadgeBackgroundColor({ tabId: tab.id, color: '#92400e' }));
   Promise.resolve(
     api.scripting.executeScript({
       target: { tabId: tab.id },
@@ -44,6 +56,6 @@ api.action.onClicked.addListener((tab) => {
 api.runtime.onMessage.addListener((msg) => {
   if (!msg || msg.type !== 'cliche-toggled') return;
   const text = msg.active ? String(msg.count) : '';
-  api.action.setBadgeText(
-    typeof lastTabId === 'number' ? { tabId: lastTabId, text } : { text });
+  safeBadge(() => api.action.setBadgeText(
+    typeof lastTabId === 'number' ? { tabId: lastTabId, text } : { text }));
 });
