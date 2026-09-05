@@ -32,6 +32,15 @@ const ICONS = ['icon16.png', 'icon32.png', 'icon48.png', 'icon128.png'];
 
 const source = JSON.parse(readFileSync(path.join(root, 'manifest.json'), 'utf8'));
 
+// The add-on author, single-sourced from package.json so the name cannot drift
+// between the two files. Apache-2.0 section 4 lets a fork add its own copyright
+// for its own changes, provided the upstream notices are retained — LICENSE
+// still carries Simon Willison's and Bruno Renie's, and every modified file
+// carries its section 4(b) change notice. This names the publisher of this
+// fork, not the author of the engine.
+const { author } = JSON.parse(
+  readFileSync(path.join(root, 'package.json'), 'utf8'));
+
 const TARGETS = {
   chrome(m) {
     delete m.background.scripts;
@@ -42,7 +51,7 @@ const TARGETS = {
   },
   firefox(m) {
     delete m.background.service_worker;
-    m.author = 'Haider Alwasiti';
+    m.author = author;
   }
 };
 

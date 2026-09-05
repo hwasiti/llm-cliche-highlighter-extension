@@ -124,6 +124,15 @@ llm-cliche-highlighter@wasiti14.gmail.com
 
 The manifest is authoritative. If it changes, change it here too.
 
+**Author.** The Firefox manifest carries `Haider Alwasiti <wasiti14@gmail.com>`,
+read from `package.json` by the build so it lives in exactly one place. Naming
+the fork's publisher here is what Apache-2.0 section 4 allows, since the
+upstream copyright notices stay in LICENSE and every modified file keeps its
+change notice. AMO displays this string on the listing, so the address becomes
+public on submission; shorten it to the name alone in `package.json` if you
+would rather not publish it. Chrome gets no author key and takes the developer
+name from the publisher account.
+
 **Data collection** is already declared as `"required": ["none"]`. Make the AMO
 form's answers agree with the manifest; a mismatch is a rejection.
 
